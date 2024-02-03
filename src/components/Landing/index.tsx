@@ -9,7 +9,7 @@ export const Landing: React.FC = () => {
       <p>This is the home page of the app.</p>
       <button
         className="bg-cyan-950 p-2 w-20 text-white rounded-lg hover:text-gray-400 hover:bg-cyan-900 shadow-black shadow-md ease-in-out transition"
-        onClick={() => navigate("/Login")}
+        onClick={() => navigate("/login")}
       >
         Login
       </button>

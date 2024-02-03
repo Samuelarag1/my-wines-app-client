@@ -1,9 +1,9 @@
 export interface IMUser {
   name?: string;
+  lastname: string;
+  username: string;
+  age?: string;
   email: string;
   password: string;
   confirmPassword?: string;
-  age?: number;
-  created_at?: Date;
-  updated_at?: Date;
-}
+  }

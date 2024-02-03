@@ -69,7 +69,7 @@ export const Login = () => {
           </button>
           <a
             onClick={() => navigate("/register")}
-            className="mt-28 hover:cursor-pointer p-2 rounded-lg bg-stone-800 text-white  hover:text-white  transition duration-500 ease-in-out hover:bg-opacity-80 text-center"
+            className="mt-28 hover:cursor-pointer p-2 rounded-lg bg-stone-800 text-white  transition duration-500 ease-in-out hover:bg-opacity-80 text-center"
           >
             Crear nuevo usuario
           </a>

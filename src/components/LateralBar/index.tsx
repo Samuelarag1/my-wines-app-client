@@ -1,4 +1,9 @@
+import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 const LateralBar = () => {
+  const location = useLocation();
+
   return (
     <div className="w-96 absolute top-0 bg-zinc-200 properties  opacity-80 h-screen">
       <div>
@@ -6,24 +11,51 @@ const LateralBar = () => {
 
         <div className="flex flex-col text-2xl mt-72 ml-2 p-0 gap-2">
           <p>
-            <a href="#" className="propertiesLinks">
+            <Link
+              to="/home"
+              className={
+                location.pathname === "/home" ? "active" : "propertiesLinks"
+              }
+            >
+              Inicio
+            </Link>
+          </p>
+          <p>
+            <Link
+              to="/AllWines"
+              className={
+                location.pathname === "/AllWines" ? "active" : "propertiesLinks"
+              }
+            >
               Todos los vinos
-            </a>
+            </Link>
           </p>
           <p>
-            <a href="#" className="propertiesLinks">
+            <Link
+              to="/NewWine"
+              className={
+                location.pathname === "/NewWine" ? "active" : "propertiesLinks"
+              }
+            >
               Agregar nuevo Vino
-            </a>
+            </Link>
           </p>
           <p>
-            <a href="#" className="propertiesLinks">
+            <Link
+              to="/Favorites"
+              className={
+                location.pathname === "/Favorites"
+                  ? "active"
+                  : "propertiesLinks"
+              }
+            >
               Mis vinos favoritos
-            </a>
+            </Link>
           </p>
           <p>
-            <a href="#" className="exitLink">
+            <Link to="/login" className="exitLink">
               Salir
-            </a>
+            </Link>
           </p>
         </div>
       </div>
