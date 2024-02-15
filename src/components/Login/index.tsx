@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useCallback } from "react";
 import { Validate } from "./validate";
 import "../../styles.css";
+import axios from "axios";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -11,25 +12,36 @@ export const Login = () => {
   });
 
   const handleOnSubmit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+    async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (user.email.length > 0 && user.password.length > 0) {
         Validate(user);
+        try {
+          const response = await axios.post(
+            "http://localhost:3000/users/login",
+            user
+          );
+          if (response.data) {
+            return navigate("/home");
+          }
+        } catch (error) {
+          alert("no existe en db");
+        }
       }
     },
-    [user]
+    [user, navigate]
   );
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
-
     setUser({
       ...user,
       [name]: value,
     });
   };
+
   return (
-    <div className=" h-screen w-screen bg-stone-700">
+    <div className=" h-screen w-screen bg-stone-700 pattern">
       <div className="bg-zinc-300 text-white p-5 rounded-xl flex shadow-black shadow-xl centerLogin">
         <form
           onSubmit={handleOnSubmit}

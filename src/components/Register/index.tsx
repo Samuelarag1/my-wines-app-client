@@ -1,55 +1,94 @@
 import axios from "axios";
 import { validateRegister, validateEmail } from "./validateRegister";
+import { IMUser } from "../../models/IMUser";
 
+import { ReactNotifications } from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
+import { Store } from "react-notifications-component";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<IMUser>({
     name: "",
     lastname: "",
     username: "",
     email: "",
-    age: "",
+    age: undefined,
     password: "",
+    image: "",
     confirmPassword: "",
   });
   const navigate = useNavigate();
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
-    let newValue;
 
-    if (name === "age") {
-      newValue = /^\d*$/.test(value) ? value : "";
-    } else {
-      newValue = value;
-    }
     setUser({
       ...user,
-      [name]: newValue,
+      [name]: name === "age" ? parseInt(value) : value,
     });
   };
 
-  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const notifyCreate = () => {
+    Store.addNotification({
+      title: "Usuario Creado",
+      message: `Redireccionando`,
+      type: "success",
+      insert: "top",
+      container: "bottom-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 5000,
+        onScreen: true,
+      },
+    });
+    setTimeout(() => {
+      navigate("/login");
+    }, 5000);
+  };
+
+  const crearUsuario = async () => {
+    try {
+      await axios.post("http://localhost:3000/users", user, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setUser({
+        name: "",
+        lastname: "",
+        username: "",
+        email: "",
+        age: undefined,
+        password: "",
+        image: "",
+      });
+      notifyCreate();
+    } catch (error) {
+      return alert(error);
+    }
+  };
+
+  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (validateEmail(user) && validateRegister(user)) {
-      try {
-        axios.post("http://localhost:3001/users", user);
-        // navigate("/login");
-        console.log(user);
-        return alert("Usuario Creado");
-      } catch (error) {
-        return alert("Error al crear Usuario");
+    try {
+      if (validateEmail(user) && validateRegister(user)) {
+        await crearUsuario();
+      } else {
+        alert("El campo Email o Password no son correctos");
       }
-    } else {
-      return alert("El campo Email o Password no son correctos");
+    } catch (error) {
+      console.error("Error submitting form:", error);
     }
   };
 
   return (
-    <div className="bg-stone-700 h-screen w-screen">
-      <div className="bg-zinc-300 text-white centerRegister p-5 rounded-xl flex shadow-xl shadow-black ">
+    <div className="bg-stone-700 h-screen w-screen pattern">
+      <ReactNotifications className="font-extrabold" />;
+      <div className="bg-zinc-300 text-white centerRegister p-10 rounded-xl flex shadow-xl shadow-black ">
         <form onSubmit={handleOnSubmit}>
           <div className="flex flex-col justify-between items-center gap-2">
             <h1 className="mb-4 text-3xl text-black text-center">
@@ -96,7 +135,7 @@ export const Register = () => {
               <div>
                 <p className="font-semibold text-lg text-black">Edad</p>
                 <input
-                  type="text"
+                  type="number"
                   name="age"
                   value={user.age}
                   pattern="[0-9]*"
@@ -138,12 +177,27 @@ export const Register = () => {
               className="p-2 w-full bg-zinc-200 rounded-md text-center focus:outline-double text-black"
             />
 
-            <button
-              type="submit"
-              className="mt-10 bg-stone-800 p-2 rounded-lg hover:bg-stone-500 focus:ease-in-out transition duration-500 ease-in-out text-white text-center "
-            >
-              Crear Nuevo Usuario
-            </button>
+            <input
+              type="file"
+              name="image"
+              className="text-black"
+              value={user.image}
+              onChange={handleOnChange}
+            />
+            <div className="grid grid-cols-2 items-center gap-2">
+              <button
+                type="submit"
+                className=" bg-stone-800 p-2 mt-6 rounded-lg hover:bg-stone-500 focus:ease-in-out transition duration-500 ease-in-out text-white text-center "
+              >
+                Crear Usuario
+              </button>
+              <button
+                className="bg-stone-800 p-2 mt-6 rounded-lg hover:bg-stone-500 focus:ease-in-out transition duration-500 ease-in-out text-white text-center "
+                onClick={() => navigate("/login")}
+              >
+                Tengo un usuario
+              </button>
+            </div>
           </div>
         </form>
       </div>
