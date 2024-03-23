@@ -97,7 +97,10 @@ export const NewWine = () => {
               onChange={handleOnChange}
             />
           </div>
-          <button className=" hover:cursor-pointer p-2 rounded-lg bg-stone-800 text-white  transition duration-500 ease-in-out hover:bg-opacity-80 text-center">
+          <button
+            // onClick={}
+            className=" hover:cursor-pointer p-2 rounded-lg bg-stone-800 text-white  transition duration-500 ease-in-out hover:bg-opacity-80 text-center"
+          >
             Agregar
           </button>
         </form>

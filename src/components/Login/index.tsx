@@ -3,10 +3,9 @@ import { useState, useCallback } from "react";
 import { Validate } from "./validate";
 import "../../styles.css";
 import axios from "axios";
-
 export const Login = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState({
+  const [user, setUsers] = useState({
     email: "",
     password: "",
   });
@@ -34,7 +33,7 @@ export const Login = () => {
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
-    setUser({
+    setUsers({
       ...user,
       [name]: value,
     });
@@ -80,7 +79,7 @@ export const Login = () => {
             Ingresar
           </button>
           <a
-            onClick={() => navigate("/register")}
+            // onClick={() => navigate("/register")}
             className="mt-28 hover:cursor-pointer p-2 rounded-lg bg-stone-800 text-white  transition duration-500 ease-in-out hover:bg-opacity-80 text-center"
           >
             Crear nuevo usuario

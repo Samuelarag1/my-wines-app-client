@@ -145,6 +145,23 @@
   background-color: #5D536B;
   color: white;
 }
+.imgInicio{
+  background-image: url('/public/corchos.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: blur(3px);
+  height: 100%;
+  width: 100%;
+}
+.imgInicio::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
 .pattern {
   width: 100%;
   height: 100%;

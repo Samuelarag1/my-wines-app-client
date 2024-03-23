@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import React from "react";
 
 import { Login } from "./components/Login";
 import { Register } from "./components/Register";
@@ -20,26 +19,26 @@ export const App: React.FC = () => {
   return (
     <>
       {location.pathname === "/" ? (
-        <div className=" h-screen w-screen bg-stone-700 pattern ">
-          <nav className="h-32 bg-zinc-300 shadow-lg shadow-black rounded-sm ">
-            <div className="flex  justify-end ">
+        <div className=" flex flex-col h-screen w-screen ">
+          <nav className="h-32 bg-stone-700 shadow-lg shadow-black rounded-sm">
+            <div className="flex justify-end m-auto h-full items-center">
               <a
                 onClick={() => navigate("/login")}
-                className=" hover:cursor-pointer p-2 rounded-lg bg-stone-800 text-white m-2  transition duration-500 ease-in-out hover:bg-opacity-80 text-center"
+                className=" hover:cursor-pointer p-2 rounded-lg bg-stone-800 text-white m-2  transition duration-500 ease-in-out hover:bg-opacity-80 text-center hover:bg-zinc-200 hover:text-black"
               >
                 Ingresar
               </a>
               <a
                 onClick={() => navigate("/register")}
-                className=" hover:cursor-pointer p-2 rounded-lg bg-stone-800 text-white m-2 transition duration-500 ease-in-out hover:bg-opacity-80 text-center"
+                className=" hover:cursor-pointer p-2 rounded-lg bg-zinc-200 text-black m-2 transition duration-500 ease-in-out hover:bg-opacity-80 text-center hover:bg-stone-800 hover:text-white"
               >
                 Crear Cuenta
               </a>
             </div>
           </nav>
-
-          <footer className="bg-zinc-200 opacity-80 bottom-0 absolute w-full text-center p-2">
-            <p className="text-black text-lg">
+          <div className=" imgInicio"></div>
+          <footer className="bg-stone-700 opacity-80 bottom-0 absolute w-full text-center p-2">
+            <p className="text-white text-lg">
               © 2024 Samuel Aragon. All rights reserved
             </p>
           </footer>

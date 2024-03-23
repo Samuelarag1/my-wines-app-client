@@ -10,7 +10,7 @@ export const Home = () => {
           Ultimo vino agregado
         </h1>
         <div className=" bg-zinc-200 mySquare border-4 border-black">
-          <h1 className="text-xl">Nombre</h1>
+          <h1 className="text-xl">{"no hay usuario"}</h1>
           <img
             src="bottle.jpg"
             alt=""
