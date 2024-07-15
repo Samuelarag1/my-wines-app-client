@@ -4,7 +4,6 @@ export interface IMUser {
   email: string | undefined;
   image: string | undefined;
   password: string | undefined;
-  confirmPassword?: string | undefined;
 }
 
 export interface UserLoginDTO {

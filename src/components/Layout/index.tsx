@@ -25,7 +25,7 @@ export const LayoutDefault = () => {
               <img
                 src={user?.image}
                 className="icon bg-black p-1"
-                alt="no se encontro la imagen"
+                alt={user?.name}
               />
             </div>
           </div>

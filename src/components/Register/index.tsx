@@ -2,10 +2,10 @@ import axios from "axios";
 import { validateRegister, validateEmail } from "./validateRegister";
 import { IMUser } from "../../models/IMUser";
 
-import { ReactNotifications } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AlertComponent, { IAlertProps } from "../../Alerts/Alert";
 
 export const Register = () => {
   const [user, setUser] = useState<IMUser>({
@@ -14,15 +14,22 @@ export const Register = () => {
     age: undefined,
     password: "",
     image: "",
-    confirmPassword: "",
   });
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [alertProps, setAlertProps] = useState<IAlertProps>({
+    message: "",
+    severity: "info",
+    title: "",
+  });
 
   const navigate = useNavigate();
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
 
+    if (name === "confirmPassword") {
+      setConfirmPassword(value);
+    }
     setUser({
       ...user,
       [name]: name === "age" ? parseInt(value) : value,
@@ -37,16 +44,33 @@ export const Register = () => {
           "Content-Type": "application/json",
         },
       });
+      setAlertProps({
+        message: "Usuario creado correctamente",
+        severity: "success",
+        title: "Redirigiendo al Login",
+      });
+      setTimeout(() => {
+        navigate("/login");
+      }, 500);
       setUser({
         name: "",
         email: "",
         age: undefined,
         password: "",
-        confirmPassword: "",
         image: "",
       });
-    } catch (error) {
-      return alert(error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.log(error.response.data.message);
+      const mensaje = error.response.data.message.split(" ");
+      const subArray = mensaje.slice(0, 5); // Esto tomará los elementos del 0 al 4
+      const mensajeDefinitivo = subArray.join(" ");
+
+      setAlertProps({
+        message: mensajeDefinitivo,
+        severity: "error",
+        title: "Algo salio mal",
+      });
     }
   };
 
@@ -56,7 +80,11 @@ export const Register = () => {
       if (validateEmail(user) && validateRegister(user)) {
         await crearUsuario();
       } else {
-        alert("El campo Email o Password no son correctos");
+        setAlertProps({
+          message: "El campo Email o Password no son correctos",
+          severity: "error",
+          title: "Algo salio mal",
+        });
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -64,8 +92,16 @@ export const Register = () => {
   };
 
   return (
-    <div className="bg-stone-700 h-screen w-screen pattern">
-      <ReactNotifications className="font-extrabold" />;
+    <div className="bg-stone-700 h-screen w-screen pattern overflow-hidden">
+      {alertProps.message.length > 0 ? (
+        <AlertComponent
+          message={alertProps.message}
+          severity={alertProps.severity}
+          title={alertProps.title}
+        ></AlertComponent>
+      ) : (
+        ""
+      )}
       <div className="bg-zinc-300 text-white centerRegister p-10 rounded-xl flex shadow-xl shadow-black ">
         <form onSubmit={handleOnSubmit}>
           <div className="flex flex-col justify-between items-center gap-2">
@@ -121,7 +157,7 @@ export const Register = () => {
               Repita la Contraseña
             </p>
             <input
-              value={user.confirmPassword}
+              value={confirmPassword}
               name="confirmPassword"
               type="password"
               placeholder="Repita su Contraseña"
