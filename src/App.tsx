@@ -21,17 +21,20 @@ export const App: React.FC = () => {
       <AuthProvider>
         {location.pathname === "/" && (
           <div className="flex flex-col h-screen w-screen">
-            <nav className="h-32 bg-stone-700 shadow-lg shadow-black rounded-sm">
-              <div className="flex justify-end m-auto h-full items-center">
+            <nav className="h-32 bg-stone-700 flex items-center">
+              <h1 className="text-white ml-20 text-3xl w-full ">
+                Mi coleccion de vinos
+              </h1>
+              <div className="flex justify-end m-auto h-full items-center w-full">
                 <a
                   onClick={() => navigate("/login")}
-                  className="hover:cursor-pointer p-2 rounded-lg bg-stone-800 text-white m-2 transition duration-500 ease-in-out hover:bg-opacity-80 text-center hover:bg-zinc-200 hover:text-black"
+                  className="hover:cursor-pointer p-2 rounded-md text-xl bg-stone-800 text-white m-2 transition duration-500 ease-in-out hover:bg-opacity-80 text-center hover:bg-zinc-200 hover:text-black"
                 >
                   Ingresar
                 </a>
                 <a
                   onClick={() => navigate("/register")}
-                  className="hover:cursor-pointer p-2 rounded-lg bg-zinc-200 text-black m-2 transition duration-500 ease-in-out hover:bg-opacity-80 text-center hover:bg-stone-800 hover:text-white"
+                  className="hover:cursor-pointer p-2 rounded-md text-xl bg-zinc-200 text-black m-2 transition duration-500 ease-in-out hover:bg-opacity-80 text-center hover:bg-stone-800 hover:text-white"
                 >
                   Crear Cuenta
                 </a>
