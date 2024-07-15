@@ -1,13 +1,20 @@
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
+import { useAuth } from "../../context/AuthContext";
 const LateralBar = () => {
+  const { user, logout } = useAuth();
   const location = useLocation();
+  console.log(user);
+
+  const handleOnLogout = () => {
+    logout();
+  };
 
   return (
     <div className="w-96 absolute top-0 bg-zinc-200 properties  opacity-80 h-screen">
       <div>
-        <h1 className="font-light m-2 text-4xl">Welcome Username</h1>
+        <h1 className="font-light m-2 text-4xl">Welcome {user?.name}</h1>
 
         <div className="flex flex-col text-2xl mt-72 ml-2 p-0 gap-2">
           <p>
@@ -53,7 +60,7 @@ const LateralBar = () => {
             </Link>
           </p>
           <p>
-            <Link to="/login" className="exitLink">
+            <Link to="/login" className="exitLink" onClick={handleOnLogout}>
               Salir
             </Link>
           </p>

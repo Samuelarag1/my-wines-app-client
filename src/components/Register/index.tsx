@@ -4,21 +4,20 @@ import { IMUser } from "../../models/IMUser";
 
 import { ReactNotifications } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
-import { Store } from "react-notifications-component";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
   const [user, setUser] = useState<IMUser>({
     name: "",
-    lastname: "",
-    username: "",
     email: "",
     age: undefined,
     password: "",
     image: "",
     confirmPassword: "",
   });
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const navigate = useNavigate();
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,25 +27,6 @@ export const Register = () => {
       ...user,
       [name]: name === "age" ? parseInt(value) : value,
     });
-  };
-
-  const notifyCreate = () => {
-    Store.addNotification({
-      title: "Usuario Creado",
-      message: `Redireccionando`,
-      type: "success",
-      insert: "top",
-      container: "bottom-right",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeOut"],
-      dismiss: {
-        duration: 5000,
-        onScreen: true,
-      },
-    });
-    setTimeout(() => {
-      navigate("/login");
-    }, 5000);
   };
 
   const crearUsuario = async () => {
@@ -59,14 +39,12 @@ export const Register = () => {
       });
       setUser({
         name: "",
-        lastname: "",
-        username: "",
         email: "",
         age: undefined,
         password: "",
+        confirmPassword: "",
         image: "",
       });
-      notifyCreate();
     } catch (error) {
       return alert(error);
     }
@@ -102,32 +80,6 @@ export const Register = () => {
                   name="name"
                   type="text"
                   placeholder="Ingrese su nombre"
-                  onChange={handleOnChange}
-                  className="text-center w-full p-2 rounded-md  bg-zinc-200 focus:outline-double text-black"
-                />
-              </div>
-              <div>
-                <p className="font-semibold text-lg text-black">Apellido</p>
-                <input
-                  value={user.lastname}
-                  name="lastname"
-                  type="text"
-                  placeholder="Ingrese su apellido"
-                  onChange={handleOnChange}
-                  className="text-center w-full p-2 rounded-md  bg-zinc-200 focus:outline-double text-black"
-                />
-              </div>
-            </div>
-            <div className="w-full grid grid-cols-2 gap-2 text-center">
-              <div>
-                <p className="font-semibold text-lg text-black">
-                  Nombre de usuario
-                </p>
-                <input
-                  value={user.username}
-                  name="username"
-                  type="text"
-                  placeholder="Ingrese un usuario"
                   onChange={handleOnChange}
                   className="text-center w-full p-2 rounded-md  bg-zinc-200 focus:outline-double text-black"
                 />

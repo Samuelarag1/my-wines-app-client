@@ -106,7 +106,8 @@
 .icon{
   object-fit: cover;
   border-radius: 100%;
-  width: 10rem;
+  height: 150px;
+  width: 150px;
   position: absolute;
   top: 10%;
   left: 75%;

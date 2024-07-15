@@ -1,46 +1,80 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useCallback } from "react";
-import { Validate } from "./validate";
 import "../../styles.css";
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
+import { UserLoginDTO } from "../../models/IMUser";
+import { IAlertProps } from "../../Alerts/Alert";
+import AlertComponent from "../../Alerts/Alert";
+
 export const Login = () => {
+  const { login } = useAuth();
+
   const navigate = useNavigate();
-  const [user, setUsers] = useState({
-    email: "",
+  const [userLogin, setUserLogin] = useState<UserLoginDTO>({
     password: "",
+    email: "",
+  });
+
+  const [alertProps, setAlertProps] = useState<IAlertProps>({
+    message: "",
+    severity: "info",
+    title: "",
   });
 
   const handleOnSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (user.email.length > 0 && user.password.length > 0) {
-        Validate(user);
+      if (userLogin.email.length > 0 && userLogin.password.length > 0) {
         try {
           const response = await axios.post(
-            "http://localhost:3000/users/login",
-            user
+            "http://localhost:3000/auth/login",
+            userLogin
           );
-          if (response.data) {
-            return navigate("/home");
+
+          if (response.status === 200) {
+            login(response.data);
+            setAlertProps({
+              message: "Login correcto",
+              severity: "success",
+              title: "REDIRIGIENDOTE",
+            });
+            setTimeout(() => {
+              navigate("/home");
+            }, 1500);
           }
-        } catch (error) {
-          alert("no existe en db");
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch ({ response }: any) {
+          setAlertProps({
+            message: response.data.message,
+            severity: "warning",
+            title: "WARNING",
+          });
         }
       }
     },
-    [user, navigate]
+    [userLogin, login, navigate]
   );
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
-    setUsers({
-      ...user,
+    setUserLogin({
+      ...userLogin,
       [name]: value,
     });
   };
 
   return (
     <div className=" h-screen w-screen bg-stone-700 pattern">
+      {alertProps.title ? (
+        <AlertComponent
+          message={alertProps.message}
+          severity={alertProps.severity}
+          title={alertProps.title}
+        />
+      ) : (
+        ""
+      )}
       <div className="bg-zinc-300 text-white p-5 rounded-xl flex shadow-black shadow-xl centerLogin">
         <form
           onSubmit={handleOnSubmit}
@@ -51,7 +85,7 @@ export const Login = () => {
             <label className="font-semibold text-xl text-black">Email</label>
             <input
               onChange={handleOnChange}
-              value={user.email}
+              value={userLogin.email}
               name="email"
               type="text"
               placeholder="Ingresar email"
@@ -64,7 +98,7 @@ export const Login = () => {
             </label>
             <input
               onChange={handleOnChange}
-              value={user.password}
+              value={userLogin.password}
               name="password"
               type="password"
               placeholder="ingresar contraseña"
@@ -74,12 +108,12 @@ export const Login = () => {
           <button
             type="submit"
             className=" bg-stone-800 p-2 rounded-lg text-center hover:bg-opacity-80 hover:text-white transition duration-500 ease-in-out"
-            onClick={() => navigate("/home")}
+            onClick={() => handleOnSubmit}
           >
             Ingresar
           </button>
           <a
-            // onClick={() => navigate("/register")}
+            onClick={() => navigate("/register")}
             className="mt-28 hover:cursor-pointer p-2 rounded-lg bg-stone-800 text-white  transition duration-500 ease-in-out hover:bg-opacity-80 text-center"
           >
             Crear nuevo usuario

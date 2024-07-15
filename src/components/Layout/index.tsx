@@ -1,8 +1,10 @@
 import LateralBar from "../LateralBar";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export const LayoutDefault = () => {
   const location = useLocation();
+  const { user } = useAuth();
 
   return (
     <div className="bg-stone-700 w-screen h-screen">
@@ -21,7 +23,7 @@ export const LayoutDefault = () => {
             </svg>
             <div>
               <img
-                src="bottle.jpg"
+                src={user?.image}
                 className="icon bg-black p-1"
                 alt="no se encontro la imagen"
               />

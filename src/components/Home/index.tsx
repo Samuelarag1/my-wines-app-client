@@ -1,6 +1,5 @@
 import "../../styles.css";
 import { LayoutDefault } from "../Layout";
-
 export const Home = () => {
   return (
     <div>
