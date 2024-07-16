@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Routes, Route } from "react-router-dom";
 import { Login } from "./components/Login";
 import { Register } from "./components/Register";
@@ -15,6 +16,37 @@ export const App: React.FC = () => {
   useEffect(() => {
     navigate("/");
   }, []);
+
+  const reviews = [
+    {
+      name: "Carlos",
+      wine: "Luigi Bosca",
+      image: "/luigi1.jpg",
+      description:
+        "Probé el Malbec y fue una experiencia sublime. Tiene un sabor complejo, con notas de frutos rojos y un toque de roble que se siente en cada sorbo. Perfecto para una noche especial con amigos.",
+    },
+    {
+      name: "José",
+      wine: "Cordero con piel de lobo",
+      image: "/cordero.png",
+      description:
+        "Me sorprendió gratamente. Su intensidad y profundidad en el sabor, con matices de especias y un final persistente, lo hacen ideal para acompañar un buen asado. Una joya para los amantes del buen vino.",
+    },
+    {
+      name: "Miguel",
+      wine: "Ruttini",
+      image: "/ruttini.jpg",
+      description:
+        "Nunca decepciona. Este vino tiene una elegancia y equilibrio excepcionales, con aromas de ciruela y vainilla que se mezclan armoniosamente. Perfecto para una cena sofisticada.",
+    },
+    {
+      name: "Carla",
+      wine: "Luigi Bosca",
+      image: "/luigi2.png",
+      description:
+        "El Luigi Bosca Syrah es simplemente encantador. Su frescura y notas de frutas tropicales lo hacen muy agradable al paladar. Es el vino ideal para disfrutar en una tarde soleada con buena compañía.",
+    },
+  ];
 
   return (
     <>
@@ -41,6 +73,20 @@ export const App: React.FC = () => {
               </div>
             </nav>
             <div className="imgInicio"></div>
+
+            <div className="absolute flex h-[100%] w-[100%] items-center justify-center">
+              <div className=" bg-stone-800 h-[600px] w-[500px] rounded-sm shadow-xl border-[5px] m-auto border-black border-solid">
+                <h4 className="text-white text-3xl mt-2 text-center">
+                  Reseñas
+                </h4>
+              </div>
+              {reviews.map((vinos, index) => (
+                <div key={index}>
+                  <p>{vinos.wine}</p>
+                </div>
+              ))}
+            </div>
+
             <footer className="bg-stone-700 opacity-80 bottom-0 absolute w-full text-center p-2">
               <p className="text-white text-lg">
                 © 2024 Samuel Aragon. All rights reserved

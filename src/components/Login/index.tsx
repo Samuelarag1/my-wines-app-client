@@ -54,7 +54,7 @@ export const Login = () => {
       if (userLogin.email.length > 0 && userLogin.password.length > 0) {
         try {
           const response = await axios.post(
-            "http://localhost:3000/auth/login",
+            "http://localhost:3001/auth/login",
             userLogin
           );
 

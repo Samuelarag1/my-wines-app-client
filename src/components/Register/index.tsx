@@ -3,13 +3,16 @@ import { validateRegister, validateEmail } from "./validateRegister";
 import { IMUser } from "../../models/IMUser";
 
 import "react-notifications-component/dist/theme.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AlertComponent, { IAlertProps } from "../../Alerts/Alert";
 import { Tooltip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 
 export const Register = () => {
+  const navigate = useNavigate();
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const [user, setUser] = useState<IMUser>({
     name: "",
     email: "",
@@ -17,7 +20,6 @@ export const Register = () => {
     password: "",
     image: "",
   });
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [alertProps, setAlertProps] = useState<IAlertProps>({
     message: "",
     severity: "info",
@@ -33,7 +35,17 @@ export const Register = () => {
     confirmPassword: "",
   });
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (alertProps.message.length > 0) {
+      setTimeout(() => {
+        setAlertProps({
+          message: "",
+          severity: "info",
+          title: "",
+        });
+      }, 1500);
+    }
+  }, [alertProps]);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
@@ -66,7 +78,7 @@ export const Register = () => {
 
   const crearUsuario = async () => {
     try {
-      await axios.post("http://localhost:3000/users", user, {
+      await axios.post("http://localhost:3001/users", user, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
