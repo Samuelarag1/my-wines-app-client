@@ -14,9 +14,10 @@
 .propertiesLinks{
   position: relative;
   transition: 0.5s ease-in-out;
+  color: white;
 }
 .propertiesLinks:hover{
-  color: white;
+  color: black;
   transition: 0.5s ease-in-out;
 }
 
@@ -31,7 +32,6 @@
   z-index: -1;
 }
 
-
 .propertiesLinks:hover::before {
   transform: scaleX(1);
   transform-origin: left;
@@ -39,11 +39,12 @@
 
 
 .exitLink{
+  color: white;
   position: relative;
   transition: 0.5s ease-in-out;
 }
 .exitLink:hover{
-  color: white;
+  color: #7e7c81;
   transition: 0.5s ease-in-out;
 }
 
@@ -109,8 +110,8 @@
   height: 150px;
   width: 150px;
   position: absolute;
-  top: 10%;
-  left: 75%;
+  top: 5%;
+  left: 90%;
 }
 
 .centerLogin{
@@ -178,6 +179,17 @@
 }
 .registerBg {
   background-image: url('/public/mendoza-montanias.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  z-index: 0;
+  filter: brightness(70%) blur(3px);
+}
+.allWines {
+  background-image: url('/public/cava.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   height: 100%;

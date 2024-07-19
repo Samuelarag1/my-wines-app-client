@@ -6,7 +6,7 @@ import IMAuthContext from "../models/auth/AuthContext";
 const AuthContext = createContext<IMAuthContext | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<IMUser | null>(null);
+  const [user, setUser] = useState<IMUser | undefined>(undefined);
 
   const login = (userData: IMUser) => {
     setUser(userData);
@@ -14,11 +14,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setUser({
-      name: null,
-      age: null,
-      email: null,
+      name: undefined,
+      age: undefined,
+      email: undefined,
       image: undefined,
-      password: null,
+      password: undefined,
     });
   };
 

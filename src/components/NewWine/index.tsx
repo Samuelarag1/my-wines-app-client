@@ -2,20 +2,33 @@ import { useState } from "react";
 import "cropperjs/dist/cropper.css";
 import { LayoutDefault } from "../Layout";
 import { IMWines } from "../../models/Wines";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 export const NewWine = () => {
+  const { user } = useAuth();
+  console.log(user);
   const [wine, setWine] = useState<IMWines>({
-    id: "",
     name: "",
-    variety: "",
-    year: "",
+    type: "",
+    year: undefined,
     description: "",
-    price: "",
+    price: undefined,
     image: "",
+    userId: user?.id,
   });
 
-  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    try {
+      if (wine) {
+        const response = await axios.post("http://localhost:3001/wines", wine);
+        console.log(response);
+      }
+    } catch (error) {
+      // throw new Error(error);
+    }
   };
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,8 +70,8 @@ export const NewWine = () => {
             className="w-full p-2 focus:outline-double text-center text-lg text-black rounded-md "
           />
           <input
-            name="variety"
-            value={wine.variety}
+            name="type"
+            value={wine.type}
             type="text"
             placeholder="Variedad del vino"
             onChange={handleOnChange}
@@ -68,7 +81,7 @@ export const NewWine = () => {
           <input
             name="year"
             value={wine.year}
-            type="text"
+            type="number"
             onChange={handleOnChange}
             placeholder="Año de cosecha"
             className="w-full p-2 focus:outline-double text-center text-lg text-black rounded-md "
@@ -76,7 +89,7 @@ export const NewWine = () => {
           <input
             name="price"
             value={wine.price}
-            type="text"
+            type="number"
             placeholder="Precio"
             onChange={handleOnChange}
             required={true}
@@ -93,7 +106,7 @@ export const NewWine = () => {
             <input
               name="image"
               value={wine.image}
-              type="file"
+              type="text"
               onChange={handleOnChange}
             />
           </div>

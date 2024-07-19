@@ -162,7 +162,7 @@ export const Login = () => {
             </div>
             <button
               type="submit"
-              className=" bg-stone-800 p-2 rounded-lg text-center hover:bg-opacity-80 hover:text-black transition duration-500 ease-in-out"
+              className=" hover:cursor-pointer p-2 rounded-lg bg-stone-800 text-white  transition duration-500 ease-in-out hover:bg-opacity-80 text-center"
               onClick={() => handleOnSubmit}
             >
               Ingresar

@@ -1,9 +1,12 @@
+import { IMUser } from "./IMUser";
+
 export interface IMWines {
-  id: string;
+  id?: number;
   name: string;
-  variety: string;
-  year: string;
+  type: string;
+  year: number | undefined;
   description: string;
-  price: string;
+  price: number | undefined;
   image: string;
+  userId?: IMUser;
 }

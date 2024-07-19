@@ -1,4 +1,5 @@
 export interface IMUser {
+  id?: number;
   name: string | undefined;
   age: number | undefined;
   email: string | undefined;
