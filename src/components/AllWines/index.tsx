@@ -36,13 +36,16 @@ export const AllWines = (): React.ReactNode => {
               </div>
             </div>
           </div>
-          <div className="top-ever left-[400px] top-52 w-fit justify-around  h-auto p-4 rounded-md bg-opacity-20 bg-gray-400">
-            <div className="grid gap-4 grid-cols-4">
+          <div className="top-ever left-[400px] top-48 w-[900px]  p-4 rounded-md bg-opacity-80  bg-slate-800">
+            <div className="flex flex-row flex-wrap justify-between gap-5">
               {wines.map((wine, index) => (
                 <CardWine wine={wine} key={index} />
               ))}
             </div>
           </div>
+          {/* <div className="h-96 w-[600px]  bg-red-950 top-ever left-[60%]">
+            <h1>Hola chaval</h1>
+          </div> */}
           <div>
             <LateralBar />
           </div>
