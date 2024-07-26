@@ -86,7 +86,7 @@
 .mySquareAdding {
   position: fixed;
   top: 65%;
-  left: 60%;
+  left: 55%;
   transform: translate(-50%, -50%);
   border-radius: 5px;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);
@@ -137,9 +137,10 @@
   }
 
 .header{
-  position: fixed;
-  top: 35%;
-  left: 60%;
+  position: absolute;
+  color: white;
+  top: 30%;
+  left: 50%;
   transform: translate(-50%, -50%);
 }
 
@@ -304,4 +305,17 @@ background-image: url('/public/home.jpg');
   left: 0;
   z-index: 0;
   filter: brightness(70%) blur(3px);
+}
+
+
+.addWine {
+  background-image: url('/public/addWine.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    z-index: 0;
+    filter: brightness(70%) blur(3px);
 }

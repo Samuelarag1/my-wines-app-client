@@ -1,5 +1,6 @@
 import "../../styles.css";
 import { LayoutDefault } from "../Layout";
+import { Link } from "react-router-dom";
 export const Home = () => {
   return (
     <div>
@@ -17,10 +18,14 @@ export const Home = () => {
 
           <div className=" flex justify-around mt-10">
             <div className="bg-red-900 text-white p-2 rounded-[30px] hover:text-gray-200 transition-all hover:bg-black  hover:transition-all  hover:cursor-pointer">
-              <button>Añadir nuevo vino</button>
+              <Link to={"/newWine"}>
+                <button>Añadir nuevo vino</button>
+              </Link>
             </div>
             <div className="bg-red-900 text-white p-2 rounded-[30px] hover:text-gray-200 transition-all hover:bg-black  hover:transition-all  hover:cursor-pointer">
-              <button>Ver mis vinos agregados</button>
+              <Link to={"/allWines"}>
+                <button>Ver mis vinos agregados</button>
+              </Link>
             </div>
           </div>
         </div>

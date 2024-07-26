@@ -50,11 +50,12 @@ export const NewWine = () => {
 
   return (
     <div>
-      <LayoutDefault />
-
-      <h1 className="text-4xl text-center text-zinc-200 header">
-        Agregar nuevo vino
-      </h1>
+      <div className="addWine"></div>
+      <div className="">
+        <h1 className="text-4xl text-center text-black header">
+          Agregar nuevo vino
+        </h1>
+      </div>
       <div className="bg-zinc-200 h-390px w-96 rounded-md mySquareAdding">
         <form
           onSubmit={handleOnSubmit}
@@ -118,6 +119,8 @@ export const NewWine = () => {
           </button>
         </form>
       </div>
+
+      <LayoutDefault />
     </div>
   );
 };

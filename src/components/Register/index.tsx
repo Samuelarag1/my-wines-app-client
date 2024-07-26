@@ -1,7 +1,6 @@
 import axios from "axios";
 import { validateRegister, validateEmail } from "./validateRegister";
 import { IMUser } from "../../models/IMUser";
-
 import "react-notifications-component/dist/theme.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +17,7 @@ export const Register = () => {
     email: "",
     age: undefined,
     password: "",
-    image: "",
+    image: "", // Puede ser opcional
   });
   const [alertProps, setAlertProps] = useState<IAlertProps>({
     message: "",
@@ -48,7 +47,7 @@ export const Register = () => {
   }, [alertProps]);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = e.target;
+    const { value, name, files } = e.target;
 
     if (name === "confirmPassword") {
       setConfirmPassword(value);
@@ -58,11 +57,18 @@ export const Register = () => {
           [name]: `Necesita completar este campo`,
         }));
       }
+    } else if (name === "image" && files && files[0]) {
+      setUser({
+        ...user,
+        [name]: files[0],
+      });
+    } else {
+      setUser({
+        ...user,
+        [name]: name === "age" ? parseInt(value) : value,
+      });
     }
-    setUser({
-      ...user,
-      [name]: name === "age" ? parseInt(value) : value,
-    });
+
     if (value.length === 0) {
       setInputErrors((prevErrors) => ({
         ...prevErrors,
@@ -77,11 +83,20 @@ export const Register = () => {
   };
 
   const crearUsuario = async () => {
+    const formData = new FormData();
+    formData.append("name", user.name);
+    formData.append("email", user.email);
+    formData.append("age", user.age.toString());
+    formData.append("password", user.password);
+    if (user.image) {
+      formData.append("file", user.image);
+    }
+
     try {
-      await axios.post("http://localhost:3001/users", user, {
+      await axios.post("http://localhost:3001/users", formData, {
         withCredentials: true,
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       });
       setAlertProps({
@@ -99,7 +114,6 @@ export const Register = () => {
         password: "",
         image: "",
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error.response.data.message);
       const mensaje = error.response.data.message.split(" ");
@@ -247,7 +261,6 @@ export const Register = () => {
                 type="file"
                 name="image"
                 className="text-white"
-                value={user.image}
                 onChange={handleOnChange}
               />
             </div>
