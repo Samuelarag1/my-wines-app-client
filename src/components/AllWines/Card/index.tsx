@@ -25,6 +25,7 @@ export const CardWine = ({ wine }: winesProps) => {
           onClick={() => handleOnClick(wine?.id)}
         />
       </div>
+
       <div
         className={`${
           idWine && isOpened ? "" : "hidden"
