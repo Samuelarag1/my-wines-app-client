@@ -8,6 +8,29 @@ import AlertComponent, { IAlertProps } from "../../Alerts/Alert";
 import { Tooltip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 
+import { UploadOutlined } from "@ant-design/icons";
+import Upload, { UploadProps } from "antd/es/upload";
+import Button from "antd/es/button";
+import { message } from "antd";
+
+const props: UploadProps = {
+  name: "image",
+  action: "http://localhost:3001/users/api/upload",
+  headers: {
+    authorization: "multipart/form-data",
+  },
+  onChange(info) {
+    if (info.file.status !== "uploading") {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === "done") {
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === "error") {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  },
+};
+
 export const Register = () => {
   const navigate = useNavigate();
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -256,13 +279,17 @@ export const Register = () => {
             ) : (
               ""
             )}
-            <div className="items-center flex justify-center m-auto">
-              <input
-                type="file"
+            <div className="items-center flex flex-col justify-center m-auto">
+              <span>
+                <p className="font-bold">Foto de perfil</p>
+              </span>
+              <Upload
+                className="bg-gray-500 rounded-md"
+                {...props}
                 name="image"
-                className="text-white"
-                onChange={handleOnChange}
-              />
+              >
+                <Button icon={<UploadOutlined />}>Subir foto</Button>
+              </Upload>
             </div>
             <div className="grid grid-cols-2 items-center gap-2 mt-auto">
               <button
