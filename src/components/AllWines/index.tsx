@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-
 import axios from "axios";
-
 import { CardWine } from "./Card";
 import { IMWines } from "../../models/Wines";
 import { useAuth } from "../../context/AuthContext";
@@ -13,12 +11,20 @@ export const AllWines = (): React.ReactNode => {
   const { user } = useAuth();
 
   const getWines = async () => {
-    const allWines = await axios.get("http://localhost:3001/wines");
-    setWines(allWines.data);
+    try {
+      const allWines = await axios.get(
+        `http://localhost:3001/wines/${user?.id}`
+      );
+      setWines(allWines.data);
+    } catch (error) {
+      console.error("Error fetching wines:", error);
+    }
   };
 
   useEffect(() => {
-    getWines();
+    if (user?.id) {
+      getWines();
+    }
   }, []);
 
   return (
@@ -37,10 +43,10 @@ export const AllWines = (): React.ReactNode => {
               </div>
             </div>
           </div>
-          {wines.length ? (
+          {wines.length > 0 ? (
             <div className="top-ever left-[400px] top-48 w-[900px]  p-4 rounded-md bg-opacity-80  bg-slate-800">
               <div className="flex flex-row flex-wrap justify-between gap-5">
-                {wines.map((wine, index) => (
+                {wines?.map((wine, index) => (
                   <CardWine wine={wine} key={index} />
                 ))}
               </div>
@@ -48,7 +54,7 @@ export const AllWines = (): React.ReactNode => {
           ) : (
             <div className="top-ever left-[400px] top-48 w-[900px]  p-4 rounded-md bg-opacity-80  bg-slate-800">
               <p className="text-white text-xl">
-                Todavia no agregaste ningun vino{" "}
+                Todavia no agregaste ningun vino
                 <Link to={"/newWine"}>
                   <span className="p-2 rounded-lg cursor-pointer bg-red-950 text-white hover:bg-red-700 ">
                     Agregar
@@ -57,9 +63,6 @@ export const AllWines = (): React.ReactNode => {
               </p>
             </div>
           )}
-          {/* <div className="h-96 w-[600px]  bg-red-950 top-ever left-[60%]">
-            <h1>Hola chaval</h1>
-          </div> */}
           <div>
             <LateralBar />
           </div>

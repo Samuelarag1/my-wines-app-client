@@ -5,7 +5,6 @@ import { useAuth } from "../../context/AuthContext";
 const LateralBar = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
-  console.log(user);
 
   const handleOnLogout = () => {
     logout();

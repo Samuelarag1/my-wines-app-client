@@ -5,7 +5,6 @@ import { useAuth } from "../../context/AuthContext";
 export const LayoutDefault = () => {
   const location = useLocation();
   const { user } = useAuth();
-  console.log(user);
   return (
     <div className="bg-stone-700 w-screen h-screen">
       <div className="relative w-full h-5/6">

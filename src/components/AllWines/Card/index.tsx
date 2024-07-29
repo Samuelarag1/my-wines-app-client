@@ -8,7 +8,6 @@ interface winesProps {
 export const CardWine = ({ wine }: winesProps) => {
   const [idWine, setIdWine] = useState<number>();
   const [isOpened, setIsOpened] = useState(false);
-  const [isFaved, setIsFaved] = useState(false);
 
   const handleOnClick = (id: number) => {
     setIsOpened(!isOpened);
@@ -31,16 +30,12 @@ export const CardWine = ({ wine }: winesProps) => {
           idWine && isOpened ? "" : "hidden"
         } h-[400px] bg-blue-800 flex items-center rounded-lg w-[700px] justify-between absolute mt-[280px]`}
       >
-        <img
-          src={"public/luigi 2.png"}
-          alt={wine.name}
-          className="h-full rounded-s-lg"
-        />
+        <img src={wine.image} alt={wine.name} className="h-full rounded-s-lg" />
         <div className="flex flex-col text-center gap-2 h-full">
           <div className="flex justify-between">
-            <button className="rounded-full p-2">
-              {isFaved ? "❤️" : " 🤍"}
-            </button>
+            {/* <button className="rounded-full p-2">
+              { "❤️" : " 🤍"}
+            </button> */}
             <p className="text-4xl font-bold mt-0">{wine.name}</p>
             <button
               className="rounded-full p-2"
@@ -51,12 +46,7 @@ export const CardWine = ({ wine }: winesProps) => {
           </div>
           <p className="font-semibold text-2xl">{wine.year}</p>
           <div className="mt-10">
-            <span>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Repellendus labore sunt rerum illum, fugit quae dicta esse
-              reiciendis harum voluptates est. Iusto necessitatibus quae fuga
-              odit minima, adipisci facere velit?
-            </span>
+            <span>{wine.description}</span>
           </div>
         </div>
       </div>

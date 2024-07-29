@@ -1,3 +1,4 @@
+import { IMUser } from "./IMUser";
 export interface IMWines {
   id?: number;
   name: string;
@@ -5,7 +6,7 @@ export interface IMWines {
   year: string;
   description: string;
   price: string;
-  image: string;
-  userId?: number;
+  image: string | File;
+  userId?: IMUser | string | number;
   fileId?: number;
 }

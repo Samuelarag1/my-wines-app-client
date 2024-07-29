@@ -14,6 +14,9 @@ export const NewWine = () => {
   const { user } = useAuth();
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState("");
+
+  const userId = user?.id;
+
   const [wine, setWine] = useState<IMWines>({
     name: "",
     type: "",
@@ -45,46 +48,35 @@ export const NewWine = () => {
     e.preventDefault();
 
     try {
-      // Primero crea el vino sin la imagen
-      const response = await axios.post("http://localhost:3001/wines", wine);
-      if (response.status === 201) {
-        const createdWine = response.data;
+      const formData = new FormData();
+      formData.append("name", wine.name);
+      formData.append("type", wine.type);
+      formData.append("year", wine.year);
+      formData.append("description", wine.description);
+      formData.append("price", wine.price);
+      formData.append("userId", user?.id);
 
-        setStatus("OK");
+      if (file) {
+        formData.append("image", file);
+      }
 
-        // Luego sube la imagen utilizando el ID del vino recién creado
-        if (file) {
-          const formData = new FormData();
-          formData.append("image", file);
-          formData.append("wineId", createdWine.id.toString());
-
-          const imageResponse = await axios.post(
-            "http://localhost:3001/files/upload",
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            }
-          );
-
-          if (imageResponse.status === 200) {
-            // Finalmente actualiza el vino con la URL de la imagen o su ID
-            await axios.put(`http://localhost:3001/wines/${createdWine.id}`, {
-              image: imageResponse.data.fileId,
-            });
-
-            message.success("Vino creado y imagen subida correctamente");
-          } else {
-            message.error("Error al subir la imagen");
-          }
+      console.log(formData);
+      const response = await axios.post(
+        "http://localhost:3001/wines",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
         }
-      } else {
+      );
+
+      if (response.status === 201) {
+        setStatus("OK");
+      } else if (response.status === 500) {
         setStatus("FAIL");
       }
     } catch (error) {
-      message.error("Error al crear el vino. Por favor, inténtalo de nuevo.");
-      console.error(error);
+      console.error("Error creating wine:", error);
+      setStatus("FAIL");
     }
 
     setWine({
@@ -94,9 +86,8 @@ export const NewWine = () => {
       description: "",
       price: "",
       image: "",
-      userId: user?.id,
+      userId: userId,
     });
-    setFile(null);
     setTimeout(() => {
       setStatus("");
     }, 1500);
