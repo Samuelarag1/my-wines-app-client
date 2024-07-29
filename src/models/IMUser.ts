@@ -1,10 +1,11 @@
 export interface IMUser {
   id?: number;
-  name: string | undefined;
-  age: number | undefined;
-  email: string | undefined;
-  image: string | undefined;
-  password: string | undefined;
+  name: string;
+  age: string;
+  email: string;
+  image: string;
+  password: string;
+  confirmPassword?: string;
 }
 
 export interface UserLoginDTO {

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { validateRegister, validateEmail } from "./validateRegister";
+import { validateEmail } from "./validateRegister";
 import { IMUser } from "../../models/IMUser";
 import "react-notifications-component/dist/theme.css";
 import { useEffect, useState } from "react";
@@ -38,7 +38,7 @@ export const Register = () => {
   const [user, setUser] = useState<IMUser>({
     name: "",
     email: "",
-    age: undefined,
+    age: "",
     password: "",
     image: "", // Puede ser opcional
   });
@@ -70,7 +70,7 @@ export const Register = () => {
   }, [alertProps]);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, name, files } = e.target;
+    const { value, name } = e.target;
 
     if (name === "confirmPassword") {
       setConfirmPassword(value);
@@ -80,11 +80,6 @@ export const Register = () => {
           [name]: `Necesita completar este campo`,
         }));
       }
-    } else if (name === "image" && files && files[0]) {
-      setUser({
-        ...user,
-        [name]: files[0],
-      });
     } else {
       setUser({
         ...user,
@@ -116,11 +111,11 @@ export const Register = () => {
     }
 
     try {
-      await axios.post("http://localhost:3001/users", formData, {
+      await axios.post("http://localhost:3001/users", user, {
         withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        // headers: {
+        //   "Content-Type": "multipart/form-data",
+        // },
       });
       setAlertProps({
         message: "Usuario creado correctamente",
@@ -133,10 +128,13 @@ export const Register = () => {
       setUser({
         name: "",
         email: "",
-        age: undefined,
+        age: "",
         password: "",
         image: "",
+        confirmPassword: "",
       });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error.response.data.message);
       const mensaje = error.response.data.message.split(" ");
@@ -159,11 +157,11 @@ export const Register = () => {
       email: user.email ? "" : "Requiere este campo",
       password: user.password ? "" : "Requiere este campo",
       image: user.image ? "" : "Requiere este campo",
-      confirmPassword,
+      confirmPassword: confirmPassword ? "" : "Requiere este campo",
     };
     setInputErrors(errors);
     try {
-      if (validateEmail(user) && validateRegister(user)) {
+      if (validateEmail(user.email)) {
         await crearUsuario();
       } else {
         setAlertProps({

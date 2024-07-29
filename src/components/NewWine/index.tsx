@@ -4,91 +4,34 @@ import { LayoutDefault } from "../Layout";
 import { IMWines } from "../../models/Wines";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
-
 import { Result, Select } from "antd";
-
 import { UploadOutlined } from "@ant-design/icons";
 import Upload, { UploadProps } from "antd/es/upload";
 import Button from "antd/es/button";
 import { message } from "antd";
 
-const props: UploadProps = {
-  name: "image",
-  action: "http://localhost:3001/users/api/upload",
-  headers: {
-    authorization: "multipart/form-data",
-  },
-  onChange(info) {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
-
 export const NewWine = () => {
   const { user } = useAuth();
-
+  const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState("");
   const [wine, setWine] = useState<IMWines>({
     name: "",
     type: "",
-    year: undefined,
+    year: "",
     description: "",
-    price: undefined,
+    price: "",
     image: "",
     userId: user?.id,
   });
 
-  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      if (wine) {
-        const response = await axios.post("http://localhost:3001/wines", wine);
-        if (response.status === 201) {
-          setStatus("OK");
-        } else if (response.status === 500) {
-          setStatus("FAIL");
-        }
-      }
-    } catch (error) {
-      // throw new Error(error);
-    }
-    setWine({
-      name: "",
-      type: "",
-      year: 0,
-      description: "",
-      price: 0,
-      image: "",
-      userId: user?.id,
-    });
-    setTimeout(() => {
-      setStatus("");
-    }, 1500);
-  };
-
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { value } = e.target;
-    setWine({
-      ...wine,
-      type: value,
-    });
-  };
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-
     const { name, value } = e.target;
     setWine({
       ...wine,
       [name]: value,
     });
   };
+
   const handleOnChangeDescription = (
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
@@ -98,13 +41,87 @@ export const NewWine = () => {
     });
   };
 
+  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      // Primero crea el vino sin la imagen
+      const response = await axios.post("http://localhost:3001/wines", wine);
+      if (response.status === 201) {
+        const createdWine = response.data;
+
+        setStatus("OK");
+
+        // Luego sube la imagen utilizando el ID del vino recién creado
+        if (file) {
+          const formData = new FormData();
+          formData.append("image", file);
+          formData.append("wineId", createdWine.id.toString());
+
+          const imageResponse = await axios.post(
+            "http://localhost:3001/files/upload",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+
+          if (imageResponse.status === 200) {
+            // Finalmente actualiza el vino con la URL de la imagen o su ID
+            await axios.put(`http://localhost:3001/wines/${createdWine.id}`, {
+              image: imageResponse.data.fileId,
+            });
+
+            message.success("Vino creado y imagen subida correctamente");
+          } else {
+            message.error("Error al subir la imagen");
+          }
+        }
+      } else {
+        setStatus("FAIL");
+      }
+    } catch (error) {
+      message.error("Error al crear el vino. Por favor, inténtalo de nuevo.");
+      console.error(error);
+    }
+
+    setWine({
+      name: "",
+      type: "",
+      year: "",
+      description: "",
+      price: "",
+      image: "",
+      userId: user?.id,
+    });
+    setFile(null);
+    setTimeout(() => {
+      setStatus("");
+    }, 1500);
+  };
+
+  const props: UploadProps = {
+    beforeUpload(file) {
+      setFile(file);
+      return false; // Prevent upload
+    },
+    onChange(info) {
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+
   return (
     <div>
       <div className="addWine"></div>
-
       <div className="top-ever top-[25%] absolute left-[45%] rounded-md  shadow-lg shadow-black h-[600px] w-[500px] bg-stone-900 p-10 flex flex-col">
         <div className="m-0">
-          <p className="text-4xl  text-center text-white">Nuevo vino</p>
+          <p className="text-4xl text-center text-white">Nuevo vino</p>
         </div>
         <form
           onSubmit={handleOnSubmit}
@@ -123,7 +140,7 @@ export const NewWine = () => {
               autoFocus
             />
           </div>
-          <div className="flex  gap-2">
+          <div className="flex gap-2">
             <div>
               <span className="text-white">
                 <p>Año de cosecha</p>
@@ -153,26 +170,21 @@ export const NewWine = () => {
             </div>
           </div>
           <div>
-            <div className="justify-between flex  gap-2">
+            <div className="justify-between flex gap-2">
               <div>
                 <Select
                   showSearch
                   style={{ width: "200px", height: "40px" }}
                   placeholder={"Elegir.."}
+                  onChange={(value) => setWine({ ...wine, type: value })}
                   filterSort={(optionA, optionB) =>
                     (optionA?.label ?? "")
                       .toLowerCase()
                       .localeCompare((optionB?.label ?? "").toLowerCase())
                   }
                   options={[
-                    {
-                      value: "1",
-                      label: "Tinto",
-                    },
-                    {
-                      value: "2",
-                      label: "Blanco",
-                    },
+                    { value: "Tinto", label: "Tinto" },
+                    { value: "Blanco", label: "Blanco" },
                   ]}
                 />
               </div>
@@ -190,23 +202,23 @@ export const NewWine = () => {
                     }
                     options={[
                       {
-                        value: "1",
+                        value: "Cabernet Sauvignon",
                         label: "Cabernet Sauvignon",
                       },
                       {
-                        value: "2",
+                        value: "Merlot",
                         label: "Merlot",
                       },
                       {
-                        value: "3",
+                        value: "Pinot Noir",
                         label: "Pinot Noir",
                       },
                       {
-                        value: "4",
+                        value: "Malbec",
                         label: "Malbec",
                       },
                       {
-                        value: "5",
+                        value: "Syrah/Shiraz",
                         label: "Syrah/Shiraz",
                       },
                     ]}
@@ -226,29 +238,29 @@ export const NewWine = () => {
                     }
                     options={[
                       {
-                        value: "1",
+                        value: "Sauvignon Blanc",
                         label: "Sauvignon Blanc",
                       },
                       {
-                        value: "2",
+                        value: "Riesling",
                         label: "Riesling",
                       },
                       {
-                        value: "3",
+                        value: "Pinot Grigio",
                         label: "Pinot Grigio",
                       },
                       {
-                        value: "4",
+                        value: "Moscato",
                         label: "Moscato",
                       },
                       {
-                        value: "5",
+                        value: "Chardonnay",
                         label: "Chardonnay",
                       },
                     ]}
                   />
                 </div>
-              )}{" "}
+              )}
             </div>
           </div>
           <textarea
@@ -259,7 +271,7 @@ export const NewWine = () => {
             className="w-full p-2 focus:outline-none text-center text-lg text-black rounded-md  placeholder:text-black placeholder:opacity-50  resize-none h-[160px]"
           />
           <div>
-            <div className="relative  items-center text-white">
+            <div className="relative items-center text-white">
               <div className="items-center flex flex-col justify-center m-auto">
                 <Upload
                   className="bg-gray-500 rounded-md"
@@ -271,7 +283,7 @@ export const NewWine = () => {
               </div>
             </div>
           </div>
-          <button className=" hover:cursor-pointer p-2 rounded-lg bg-stone-800 text-white  transition duration-500 ease-in-out hover:bg-opacity-80 text-center mt-auto">
+          <button className="hover:cursor-pointer p-2 rounded-lg bg-stone-800 text-white transition duration-500 ease-in-out hover:bg-opacity-80 text-center mt-auto">
             Agregar
           </button>
         </form>
@@ -281,7 +293,7 @@ export const NewWine = () => {
           <Result
             status="success"
             title="Vino creado correctamente"
-            subTitle={`Muy bien ${user?.name}, uno mas para la coleccion!`}
+            subTitle={`Muy bien ${user?.name}, ¡uno más para la colección!`}
           />
         ) : (
           ""
