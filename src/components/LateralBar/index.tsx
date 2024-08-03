@@ -49,18 +49,6 @@ const LateralBar = () => {
             </Link>
           </p>
           <p>
-            <Link
-              to="/Favorites"
-              className={
-                location.pathname === "/Favorites"
-                  ? "active"
-                  : "propertiesLinks"
-              }
-            >
-              Mis vinos favoritos
-            </Link>
-          </p>
-          <p>
             <Link to="/login" className="exitLink" onClick={handleOnLogout}>
               Salir
             </Link>

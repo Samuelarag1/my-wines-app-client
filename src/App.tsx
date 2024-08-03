@@ -5,7 +5,6 @@ import { Register } from "./components/Register";
 import { Home } from "./components/Home";
 import { NewWine } from "./components/NewWine";
 import { AllWines } from "./components/AllWines";
-import { Favorites } from "./components/Favorites";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { AuthProvider } from "./context/AuthContext";
@@ -123,7 +122,6 @@ export const App: React.FC = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/newWine" element={<NewWine />} />
         <Route path="/AllWines" element={<AllWines />} />
-        <Route path="/Favorites" element={<Favorites />} />
       </Routes>
     </AuthProvider>
   );

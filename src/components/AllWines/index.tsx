@@ -45,7 +45,7 @@ export const AllWines = (): React.ReactNode => {
           </div>
           {wines.length > 0 ? (
             <div className="top-ever left-[400px] top-48 w-[900px]  p-4 rounded-md bg-opacity-80  bg-slate-800">
-              <div className="flex flex-row flex-wrap justify-between gap-5">
+              <div className="flex flex-row flex-wrap justify-around gap-5">
                 {wines?.map((wine, index) => (
                   <CardWine wine={wine} key={index} />
                 ))}

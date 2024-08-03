@@ -12,7 +12,7 @@ export const Home = () => {
             <p className="text-3xl font-bold">
               Comparte tu experiencia
               <br />
-              <span className="ml-10"> descubre nuevas perspectivas...</span>
+              <span className="ml-10"> Recorda tu perspectiva...</span>
             </p>
           </div>
 

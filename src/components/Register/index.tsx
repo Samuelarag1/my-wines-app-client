@@ -13,24 +13,6 @@ import Upload, { UploadProps } from "antd/es/upload";
 import Button from "antd/es/button";
 import { message } from "antd";
 
-const props: UploadProps = {
-  name: "image",
-  action: "http://localhost:3001/users/api/upload",
-  headers: {
-    authorization: "multipart/form-data",
-  },
-  onChange(info) {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
-
 export const Register = () => {
   const navigate = useNavigate();
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -56,6 +38,8 @@ export const Register = () => {
     image: "",
     confirmPassword: "",
   });
+
+  const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (alertProps.message.length > 0) {
@@ -100,55 +84,6 @@ export const Register = () => {
     }
   };
 
-  const crearUsuario = async () => {
-    const formData = new FormData();
-    formData.append("name", user.name);
-    formData.append("email", user.email);
-    formData.append("age", user.age.toString());
-    formData.append("password", user.password);
-    if (user.image) {
-      formData.append("file", user.image);
-    }
-
-    try {
-      await axios.post("http://localhost:3001/users", user, {
-        withCredentials: true,
-        // headers: {
-        //   "Content-Type": "multipart/form-data",
-        // },
-      });
-      setAlertProps({
-        message: "Usuario creado correctamente",
-        severity: "success",
-        title: "Redirigiendo al Login",
-      });
-      setTimeout(() => {
-        navigate("/login");
-      }, 500);
-      setUser({
-        name: "",
-        email: "",
-        age: "",
-        password: "",
-        image: "",
-        confirmPassword: "",
-      });
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.log(error.response.data.message);
-      const mensaje = error.response.data.message.split(" ");
-      const subArray = mensaje.slice(0, 5);
-      const mensajeDefinitivo = subArray.join(" ");
-
-      setAlertProps({
-        message: mensajeDefinitivo,
-        severity: "error",
-        title: "Algo salio mal",
-      });
-    }
-  };
-
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const errors = {
@@ -173,6 +108,71 @@ export const Register = () => {
     } catch (error) {
       console.error("Error submitting form:", error);
     }
+  };
+
+  const crearUsuario = async () => {
+    const formData = new FormData();
+    formData.append("name", user.name);
+    formData.append("email", user.email);
+    formData.append("age", user.age.toString());
+    formData.append("password", user.password);
+
+    if (file) {
+      formData.append("image", file);
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/users",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      setAlertProps({
+        message: "Usuario creado correctamente",
+        severity: "success",
+        title: "Redirigiendo al Login",
+      });
+      setTimeout(() => {
+        navigate("/login");
+      }, 500);
+
+      setUser({
+        name: "",
+        email: "",
+        age: "",
+        password: "",
+        image: "",
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.log(error.response.data.message);
+      const mensaje = error.response.data.message.split(" ");
+      const subArray = mensaje.slice(0, 5);
+      const mensajeDefinitivo = subArray.join(" ");
+
+      setAlertProps({
+        message: mensajeDefinitivo,
+        severity: "error",
+        title: "Algo salio mal",
+      });
+    }
+  };
+
+  const props: UploadProps = {
+    beforeUpload(file) {
+      setFile(file);
+      return false; // Prevent upload
+    },
+    onChange(info) {
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
   };
 
   return (
