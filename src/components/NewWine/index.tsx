@@ -239,6 +239,10 @@ export const NewWine = () => {
                         label: "Sauvignon Blanc",
                       },
                       {
+                        value: "Syrah",
+                        label: "Syrah",
+                      },
+                      {
                         value: "Riesling",
                         label: "Riesling",
                       },
