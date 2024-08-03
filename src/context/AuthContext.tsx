@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userPic, setUserPic] = useState("");
   const getImage = async () => {
     const image = await axios.get(
-      `${import.meta.env.VITE_APP_API_URL}${user.image}`
+      `${import.meta.env.VITE_APP_API_URL}${user?.image}`
     );
     setUserPic(image?.config?.url);
   };

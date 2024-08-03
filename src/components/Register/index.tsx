@@ -122,13 +122,9 @@ export const Register = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:3001/users",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      await axios.post("http://localhost:3001/users", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       setAlertProps({
         message: "Usuario creado correctamente",
@@ -137,7 +133,7 @@ export const Register = () => {
       });
       setTimeout(() => {
         navigate("/login");
-      }, 500);
+      }, 2000);
 
       setUser({
         name: "",
