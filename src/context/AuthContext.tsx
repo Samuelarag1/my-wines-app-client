@@ -1,4 +1,3 @@
-// src/context/AuthContext.tsx
 import {
   createContext,
   useState,
@@ -14,36 +13,33 @@ const AuthContext = createContext<IMAuthContext | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<IMUser | undefined>(undefined);
-  const [userPic, setUserPic] = useState("");
-  const getImage = async () => {
-    const image = await axios.get(
-      `${import.meta.env.VITE_APP_API_URL}${user?.image}`
-    );
-    setUserPic(image?.config?.url);
+
+  const getImage = async (imagePath: string): Promise<string | undefined> => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_APP_API_URL}${imagePath}`
+      );
+      return response?.config?.url;
+    } catch (error) {
+      console.error("Error fetching image:", error);
+      return undefined;
+    }
   };
 
-  useEffect(() => {
-    getImage();
-  }, []);
-
-  const login = (userData: IMUser) => {
-    setUser(userData);
-    if (userPic) {
+  const login = async (userData: IMUser) => {
+    if (userData.image) {
+      const imageUrl = await getImage(userData.image);
       setUser({
         ...userData,
-        ["image"]: userPic,
+        image: imageUrl || userData.image, // Use the fetched image URL or fallback to the provided image path
       });
+    } else {
+      setUser(userData);
     }
   };
 
   const logout = () => {
-    setUser({
-      name: "",
-      age: "",
-      email: "",
-      image: "",
-      password: "",
-    });
+    setUser(undefined);
   };
 
   return (

@@ -11,6 +11,8 @@ export const CardWine = ({ wine }: winesProps) => {
   const [isOpened, setIsOpened] = useState(false);
   const [winePic, setWinePic] = useState("");
 
+  console.log(wine);
+
   const getImage = async () => {
     const image = await axios.get(
       `${import.meta.env.VITE_APP_API_URL}${wine.image}`
@@ -57,6 +59,9 @@ export const CardWine = ({ wine }: winesProps) => {
               </div>
               <p className="text-4xl font-bold mt-0">{wine.name}</p>
               <p className="text-2xl font-bold">{wine.year}</p>
+              <div className=" flex justify-center font-bold text-xl">
+                <p>{`${wine.type} - ${wine.grape}`}</p>
+              </div>
             </div>
           </div>
           <div className="h-full">

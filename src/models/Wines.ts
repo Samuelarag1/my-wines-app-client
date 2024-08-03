@@ -4,6 +4,7 @@ export interface IMWines {
   name: string;
   type: string;
   year: string;
+  grape: string;
   description: string;
   price: string;
   image: string | File;

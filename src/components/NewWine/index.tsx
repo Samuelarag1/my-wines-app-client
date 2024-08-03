@@ -22,6 +22,7 @@ export const NewWine = () => {
     type: "",
     year: "",
     description: "",
+    grape: "",
     price: "",
     image: "",
     userId: user?.id,
@@ -54,6 +55,8 @@ export const NewWine = () => {
       formData.append("year", wine.year);
       formData.append("description", wine.description);
       formData.append("price", wine.price);
+      formData.append("grape", wine.grape);
+
       formData.append("userId", user?.id);
 
       if (file) {
@@ -83,6 +86,7 @@ export const NewWine = () => {
       name: "",
       type: "",
       year: "",
+      grape: "",
       description: "",
       price: "",
       image: "",
@@ -186,6 +190,7 @@ export const NewWine = () => {
                     style={{ width: "200px", height: "40px" }}
                     placeholder="Buscar.."
                     optionFilterProp="label"
+                    onChange={(value) => setWine({ ...wine, grape: value })}
                     filterSort={(optionA, optionB) =>
                       (optionA?.label ?? "")
                         .toLowerCase()
@@ -222,6 +227,7 @@ export const NewWine = () => {
                     placeholder="Tipo de uva.."
                     style={{ width: "200px", height: "40px" }}
                     optionFilterProp="label"
+                    onChange={(value) => setWine({ ...wine, grape: value })}
                     filterSort={(optionA, optionB) =>
                       (optionA?.label ?? "")
                         .toLowerCase()
